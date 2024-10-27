@@ -21,8 +21,7 @@ function App() {
             <Route path="/doctor" element={<AddDoctor/>} />
             <Route path="/table" element={<AddTable/>} />
 
-             
-
+            {/* <Route path="/details/:userId" element={<UserDetails />} /> */}
 
 
 
