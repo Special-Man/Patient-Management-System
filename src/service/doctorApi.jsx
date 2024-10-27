@@ -17,4 +17,11 @@ export const getDoctors = () => {
     .catch((err) => Promise.reject(err));
 };
 
+// Update doctor details (PUT)
+export const editDoctor = (id, doctorData) => {
+  return axios.put(`${BASE_URL}/${id}`, doctorData)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err));
+};
+
 // Other CRUD operations can go here

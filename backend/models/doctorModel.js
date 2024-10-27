@@ -8,7 +8,6 @@ const insertDoctor = async (doctor_name, contact_number, email) => {
     RETURNING *;
   `;
   const values = [doctor_name, contact_number, email];
-
   const result = await pool.query(query, values);
   return result.rows[0];
 };
@@ -19,4 +18,17 @@ const getDoctors = async () => {
   return result.rows;
 };
 
-module.exports = { insertDoctor, getDoctors };
+// Update function to edit doctor details
+const updateDoctor = async (id, doctor_name, contact_number, email) => {
+  const query = `
+    UPDATE doctors
+    SET doctor_name = $1, contact_number = $2, email = $3
+    WHERE id = $4
+    RETURNING *;
+  `;
+  const values = [doctor_name, contact_number, email, id];
+  const result = await pool.query(query, values);
+  return result.rows[0];
+};
+
+module.exports = { insertDoctor, getDoctors, updateDoctor };

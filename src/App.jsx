@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 
-import AddDoctor from "./pages/AddDoctor";
-import Login from "./pages/Login";
+import { Homepage } from './pages/Homepage';
 import Layout from "./pages/theme/Layout";
-import Homepage from "./pages/Homepage"; // Import Homepage here
+
+import Login from "./pages/Login";
+import AddDoctor from "./pages/AddDoctor";
 import DoctorTable from "./pages/DoctorTable";
 
 function App() {
