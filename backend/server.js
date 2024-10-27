@@ -1,3 +1,5 @@
+import doctorRoutes from './routes/doctorRoutes.js';
+
 // server.js
 const express = require('express');
 const superadminRoutes = require('./routes/superadminRoutes');
@@ -6,6 +8,8 @@ const cors = require('cors');  // Import cors
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.use('/api/doctors', doctorRoutes);
 
 app.use(express.json()); // Middleware to parse JSON requests
 app.use(cors()); // Use this to allow all origins or configure as needed
