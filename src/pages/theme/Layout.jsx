@@ -5,18 +5,19 @@ import Footer from "./Footer";
 
 const Layout = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="row">
-        <div className="sidebar">
+      <div className="flex flex-1">
+        <div className="w-64 bg-gray-100 border-r border-gray-200"> {/* Sidebar with fixed width */}
           <Sidebar />
         </div>
-        <div className="main-body">
+        <div className="flex-1 p-6 overflow-y-auto"> {/* Main body takes up remaining space */}
           <Outlet />
         </div>
       </div>
-      <Footer />
+      <Footer className="bg-gray-100 text-center py-4 border-t border-gray-200" />
     </div>
   );
-}
+};
+
 export default Layout;

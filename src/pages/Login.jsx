@@ -22,7 +22,7 @@ const Login = () => {
 
       if (validCredentials) {
         // Redirect to "/back" route on successful login
-        navigate('/back');
+        navigate('/dashboard');
       } else {
         // Show an alert if the credentials are incorrect
         alert('Incorrect credgentials');
@@ -39,8 +39,8 @@ const Login = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-100">
-      <div className="w-full max-w-sm bg-white p-8 rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center ">
+      <div className="w-full max-w-sm bg-blue-100 p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
           {fields.map((field, index) => (
