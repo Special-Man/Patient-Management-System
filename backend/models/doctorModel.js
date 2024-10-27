@@ -18,7 +18,6 @@ const getDoctors = async () => {
   return result.rows;
 };
 
-// Update function to edit doctor details
 const updateDoctor = async (id, doctor_name, contact_number, email) => {
   const query = `
     UPDATE doctors
@@ -31,4 +30,12 @@ const updateDoctor = async (id, doctor_name, contact_number, email) => {
   return result.rows[0];
 };
 
-module.exports = { insertDoctor, getDoctors, updateDoctor };
+// Delete function to remove a doctor by ID
+const deleteDoctor = async (id) => {
+  const query = 'DELETE FROM doctors WHERE id = $1 RETURNING *';
+  const values = [id];
+  const result = await pool.query(query, values);
+  return result.rows[0];
+};
+
+module.exports = { insertDoctor, getDoctors, updateDoctor, deleteDoctor };

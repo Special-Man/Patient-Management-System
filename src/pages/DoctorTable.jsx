@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../components/Table';
 import Modal from '../components/Modal';
-import { getDoctors, editDoctor } from '../service/doctorApi';
+import { getDoctors, editDoctor, deleteDoctor } from '../service/doctorApi';
 
 const DoctorTable = () => {
   const [data, setData] = useState([]);
@@ -16,18 +16,20 @@ const DoctorTable = () => {
     { key: 'actions', label: 'Actions' }
   ];
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const doctors = await getDoctors();
-        setData(doctors);
-      } catch (error) {
-        console.error('Error fetching doctors:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Fetch doctors from the backend
+  const fetchDoctors = async () => {
+    setLoading(true);
+    try {
+      const doctors = await getDoctors();
+      setData(doctors);
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDoctors();
   }, []);
 
@@ -42,25 +44,28 @@ const DoctorTable = () => {
     setSelectedDoctor(null);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this doctor?');
     if (confirmDelete) {
-      // Delete logic here (e.g., calling delete API)
-      setData(data.filter((doctor) => doctor.id !== id));
-      console.log('Deleted doctor with ID:', id);
+      try {
+        await deleteDoctor(id);
+        setData(data.filter((doctor) => doctor.id !== id)); // Remove from local state
+        console.log('Deleted doctor with ID:', id);
+      } catch (error) {
+        console.error('Error deleting doctor:', error);
+      }
     }
   };
 
   const handleSave = async () => {
     try {
-      const updatedDoctor = await editDoctor(selectedDoctor.id, {
+      await editDoctor(selectedDoctor.id, {
         doctor_name: selectedDoctor.name,
         contact_number: selectedDoctor.contact_number,
         email: selectedDoctor.email,
       });
-
-      // Update the local data state to reflect the edited doctor details
-      setData(data.map((doctor) => (doctor.id === updatedDoctor.id ? updatedDoctor : doctor)));
+      // Refresh the list after saving changes
+      await fetchDoctors();
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error updating doctor:', error);

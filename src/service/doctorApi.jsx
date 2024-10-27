@@ -24,4 +24,9 @@ export const editDoctor = (id, doctorData) => {
     .catch((err) => Promise.reject(err));
 };
 
-// Other CRUD operations can go here
+// Delete doctor (DELETE)
+export const deleteDoctor = (id) => {
+  return axios.delete(`${BASE_URL}/${id}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err));
+};

@@ -1,6 +1,6 @@
 // routes/doctorRoutes.js
 const express = require('express');
-const { addDoctor, fetchDoctors, editDoctor } = require('../controllers/doctorController');
+const { addDoctor, fetchDoctors, editDoctor, removeDoctor } = require('../controllers/doctorController');
 
 const router = express.Router();
 
@@ -12,5 +12,8 @@ router.get('/', fetchDoctors);
 
 // Route to update doctor details (PUT request)
 router.put('/:id', editDoctor);
+
+// Route to delete a doctor (DELETE request)
+router.delete('/:id', removeDoctor);
 
 module.exports = router;

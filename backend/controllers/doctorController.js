@@ -1,5 +1,5 @@
 // controllers/doctorController.js
-const { insertDoctor, getDoctors, updateDoctor } = require('../models/doctorModel');
+const { insertDoctor, getDoctors, updateDoctor, deleteDoctor } = require('../models/doctorModel');
 
 const addDoctor = async (req, res) => {
   const { doctor_name, contact_number, email } = req.body;
@@ -23,7 +23,6 @@ const fetchDoctors = async (req, res) => {
   }
 };
 
-// Update controller to edit doctor details
 const editDoctor = async (req, res) => {
   const { id } = req.params;
   const { doctor_name, contact_number, email } = req.body;
@@ -41,4 +40,21 @@ const editDoctor = async (req, res) => {
   }
 };
 
-module.exports = { addDoctor, fetchDoctors, editDoctor };
+// Delete controller to remove a doctor by ID
+const removeDoctor = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedDoctor = await deleteDoctor(id);
+    if (deletedDoctor) {
+      res.status(200).json({ message: 'Doctor deleted successfully', doctor: deletedDoctor });
+    } else {
+      res.status(404).json({ error: 'Doctor not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting doctor:', error.message);
+    res.status(500).json({ error: 'An error occurred while deleting the doctor' });
+  }
+};
+
+module.exports = { addDoctor, fetchDoctors, editDoctor, removeDoctor };
