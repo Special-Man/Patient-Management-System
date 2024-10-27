@@ -1,4 +1,4 @@
-import pool from '../config/db.js';
+const pool = require('../db');
 
 class DoctorModel {
   static async addDoctor(name, contactNumber, email) {

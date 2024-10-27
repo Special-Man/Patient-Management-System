@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
+import { addDoctor } from '../service/doctorApi';
 
-const Back = () => {
+const AddDoctor = () => {
   const [doctorName, setDoctorName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [email, setEmail] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Doctor Name:', doctorName);
-    console.log('Contact Number:', contactNumber);
-    console.log('Email:', email);
+    const doctorData = { name: doctorName, contactNumber, email };
+
+    try {
+      const response = await addDoctor(doctorData);
+      alert('Doctor added successfully!');
+      // Clear form fields after successful submission
+      setDoctorName('');
+      setContactNumber('');
+      setEmail('');
+    } catch (error) {
+      alert('Failed to add doctor. Please try again.');
+      console.error(error);
+    }
   };
 
   return (
@@ -72,7 +82,4 @@ const Back = () => {
   );
 };
 
-// export default AddDoctor;
-
-
-export default Back
+export default AddDoctor;

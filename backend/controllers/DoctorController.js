@@ -1,20 +1,15 @@
-import DoctorModel from '../models/DoctorModel.js';
+const addDoctor =  require('../models/DoctorModel');
 
-class DoctorController {
-  static async addDoctor(req, res) {
-    const { name, contactNumber, email } = req.body;
-    
-    if (!name || !contactNumber || !email) {
-      return res.status(400).json({ message: 'Please provide all required fields' });
-    }
-    
-    try {
-      const newDoctor = await DoctorModel.addDoctor(name, contactNumber, email);
-      res.status(201).json(newDoctor);
-    } catch (error) {
-      res.status(500).json({ message: 'Failed to add doctor', error: error.message });
-    }
+const addNewDoctor = async (req, res) => {
+  const { doctorName, contactNumber, email } = req.body;
+  
+  try {
+    const newDoctor = await addDoctor(doctorName, contactNumber, email);
+    res.status(201).json(newDoctor);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: 'An error occurred while adding the doctor' });
   }
-}
+};
 
-export default DoctorController;
+module.exports = { addNewDoctor };

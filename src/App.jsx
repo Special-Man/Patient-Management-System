@@ -4,9 +4,11 @@ import './App.css';
 import { Homepage } from './pages/Homepage';
 import Layout from "./pages/theme/Layout";
 import Home from "./pages/Home";
-import Back from "./pages/Back";
-import Exit from "./pages/Exit";
+import Back from "./pages/AddDoctor";
+import Exit from "./pages/AddTable";
 import Login from "./pages/Login";
+import AddDoctor from "./pages/AddDoctor";
+import AddTable from "./pages/AddTable";
 
 
 function App() {
@@ -16,8 +18,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout/>} >
             <Route path="/home" element={<Login/>} />
-            <Route path="/back" element={<Back/>} />
-            <Route path="/exit" element={<Exit/>} />
+            <Route path="/doctor" element={<AddDoctor/>} />
+            <Route path="/table" element={<AddTable/>} />
 
              
 
