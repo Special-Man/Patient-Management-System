@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { addDoctor } from '../service/doctorApi';
+
 const AddDoctor = () => {
   const [doctorName, setDoctorName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState(''); // New state for password
   const [statusMessage, setStatusMessage] = useState('');
 
   const handleSubmit = async (e) => {
@@ -13,6 +15,7 @@ const AddDoctor = () => {
       doctor_name: doctorName,
       contact_number: contactNumber,
       email: email,
+      password: password, // Include password in the data
     };
 
     try {
@@ -21,6 +24,7 @@ const AddDoctor = () => {
       setDoctorName('');
       setContactNumber('');
       setEmail('');
+      setPassword(''); // Clear the password field after submission
     } catch (error) {
       setStatusMessage("Failed to add doctor. Please try again.");
       console.error("Error adding doctor:", error);
@@ -70,6 +74,20 @@ const AddDoctor = () => {
               placeholder="Enter email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="password">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />

@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Field from '../components/Field';
-import { getSuperadminCredentials } from '../service/superadminApi';
+import { getDoctors } from '../service/doctorApi';
 
-const Login = () => {
+const LoginDoctor = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -13,29 +13,26 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // Fetch superadmin credentials from the API
-      const credentials = await getSuperadminCredentials();
+      // Fetch doctor credentials from the API
+      const doctors = await getDoctors();
 
       // Find a match for the entered email and password
-      const validCredentials = credentials.find(
-        (cred) => cred.username === email && cred.password === password
+      const validDoctor = doctors.find(
+        (doctor) => doctor.email === email && doctor.password === password
       );
 
-      if (validCredentials) {
-        // Redirect to "/dashboard" route on successful login
-        navigate('/dashboard');
+      if (validDoctor) {
+        console.log('Login successful:', validDoctor);
+        // Redirect to the doctor dashboard route on successful login
+        navigate('/doctor-dashboard');
       } else {
         // Show an alert if the credentials are incorrect
         alert('Incorrect credentials');
       }
     } catch (error) {
-      console.error('Error fetching credentials:', error);
+      console.error('Error fetching doctor credentials:', error);
       alert('An error occurred while verifying credentials');
     }
-  };
-
-  const handleDoctorNavigation = () => {
-    navigate('/doctor-login');
   };
 
   const fields = [
@@ -44,7 +41,7 @@ const Login = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center ">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-sm bg-blue-100 p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
@@ -72,13 +69,7 @@ const Login = () => {
           >
             Login
           </button>
-          <button
-            type="button"
-            onClick={handleDoctorNavigation}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none mt-4"
-          >
-            Doctor
-          </button>
+        
           <p className="text-sm text-center text-gray-600 mt-4">
             Don't have an account?{' '}
             <a href="#" className="text-blue-500 font-semibold hover:underline">
@@ -91,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginDoctor;

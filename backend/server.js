@@ -12,7 +12,7 @@ app.use(express.json()); // Middleware to parse JSON requests
 
 // CORS configuration
 app.use(cors({
-  origin: "http://localhost:5174", // Frontend URL
+  origin: "http://localhost:5173", // Frontend URL
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));

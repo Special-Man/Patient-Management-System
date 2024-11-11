@@ -1,11 +1,12 @@
 // controllers/doctorController.js
+const { password } = require('pg/lib/defaults');
 const { insertDoctor, getDoctors, updateDoctor, deleteDoctor } = require('../models/doctorModel');
 
 const addDoctor = async (req, res) => {
-  const { doctor_name, contact_number, email } = req.body;
+  const { doctor_name, contact_number, email, password } = req.body;
 
   try {
-    const newDoctor = await insertDoctor(doctor_name, contact_number, email);
+    const newDoctor = await insertDoctor(doctor_name, contact_number, email, password);
     res.status(201).json({ message: 'Doctor added successfully', doctor: newDoctor });
   } catch (error) {
     console.error('Error adding doctor:', error.message);
@@ -25,10 +26,10 @@ const fetchDoctors = async (req, res) => {
 
 const editDoctor = async (req, res) => {
   const { id } = req.params;
-  const { doctor_name, contact_number, email } = req.body;
+  const { doctor_name, contact_number, email, password } = req.body;
 
   try {
-    const updatedDoctor = await updateDoctor(id, doctor_name, contact_number, email);
+    const updatedDoctor = await updateDoctor(id, doctor_name, contact_number, email, password);
     if (updatedDoctor) {
       res.status(200).json({ message: 'Doctor updated successfully', doctor: updatedDoctor });
     } else {
