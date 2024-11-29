@@ -1,7 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export const Sidebar = () => {
+  const location = useLocation();
+
   return (
     <div>
       <div className="flex h-screen flex-col justify-between border-e bg-white">
@@ -15,22 +17,41 @@ export const Sidebar = () => {
                 General
               </Link>
             </li>
-        
+            
             <li>
               <Link
-                to="/dashboard/add-doctor"
+                to={location.pathname.includes("/doctor-dashboard") ? "/doctor-dashboard/add-patient" : "/dashboard/add-doctor"}
                 className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
               >
-                Add Doctor
+                {location.pathname.includes("/doctor-dashboard") ? "Add Patient" : "Add Doctor"}
               </Link>
             </li>
 
             <li>
               <Link
-                to="/dashboard/doctor-details"
+                to={location.pathname.includes("/doctor-dashboard") ? "/doctor-dashboard/add-meds" : "/dashboard/add-doctor"}
                 className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
               >
-                Doctor Details
+                {location.pathname.includes("/doctor-dashboard") ? "Add Meds" : ""}
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to={location.pathname.includes("/doctor-dashboard") ? "/doctor-dashboard/meds-details" : "/dashboard/add-doctor"}
+                className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+              >
+                {location.pathname.includes("/doctor-dashboard") ? "Medicine Details" : ""}
+              </Link>
+            </li>
+            
+            <li>
+              
+              <Link
+                to={location.pathname.includes("/doctor-dashboard") ? "/doctor-dashboard/patient-details" : "/dashboard/doctor-details"}
+                className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+              >
+                {location.pathname.includes("/doctor-dashboard") ? "Patient Details" : "Doctor Details"}
               </Link>
             </li>
           </ul>

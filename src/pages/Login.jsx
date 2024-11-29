@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Field from '../components/Field';
 import { getSuperadminCredentials } from '../service/superadminApi';
+import backgroundImage from '../assets/doctorpic1.jpg'; // Make sure the path is correct
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,19 +14,14 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // Fetch superadmin credentials from the API
       const credentials = await getSuperadminCredentials();
-
-      // Find a match for the entered email and password
       const validCredentials = credentials.find(
         (cred) => cred.username === email && cred.password === password
       );
 
       if (validCredentials) {
-        // Redirect to "/dashboard" route on successful login
         navigate('/dashboard');
       } else {
-        // Show an alert if the credentials are incorrect
         alert('Incorrect credentials');
       }
     } catch (error) {
@@ -38,14 +34,25 @@ const Login = () => {
     navigate('/doctor-login');
   };
 
+  const handlePatientNavigation = () => {
+    navigate('/patient-login'); // Update the route as needed
+  };
+
   const fields = [
     { label: 'Email', type: 'text', value: email, onChange: (e) => setEmail(e.target.value) },
     { label: 'Password', type: 'password', value: password, onChange: (e) => setPassword(e.target.value) }
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center ">
-      <div className="w-full max-w-sm bg-blue-100 p-8 rounded-lg shadow-md">
+    <div
+      className="relative min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      {/* Overlay for blur effect */}
+      <div className="absolute inset-0 backdrop-blur-sm"></div>
+      
+      {/* Login Form */}
+      <div className="relative w-full max-w-sm bg-white bg-opacity-90 p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
           {fields.map((field, index) => (
@@ -78,6 +85,13 @@ const Login = () => {
             className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none mt-4"
           >
             Doctor
+          </button>
+          <button
+            type="button"
+            onClick={handlePatientNavigation}
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none mt-4"
+          >
+            Patient
           </button>
           <p className="text-sm text-center text-gray-600 mt-4">
             Don't have an account?{' '}

@@ -3,6 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const superadminRoutes = require('./routes/superadminRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
+const patientRoutes = require('./routes/patientRoutes');
+const medsRoutes = require('./routes/medsRoutes');
+
+
 require('dotenv').config();
 
 const app = express();
@@ -19,7 +23,11 @@ app.use(cors({
 
 // Use the routes with updated paths
 app.use('/api', superadminRoutes);
-app.use('/api/doctors', doctorRoutes); // All doctor CRUD operations will go under /api/doctors
+app.use('/api/doctors', doctorRoutes);
+ // All doctor CRUD operations will go under /api/doctors
+
+app.use('/api/patients', patientRoutes); // All doctor CRUD operations will go under /api/doctors
+app.use('/api/meds', medsRoutes); // All doctor CRUD operations will go under /api/doctors
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
