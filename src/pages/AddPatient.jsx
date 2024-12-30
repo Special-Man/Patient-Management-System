@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useNavigate} from 'react-router-dom';
 import { addPatient } from '../service/patientApi';
 
 const AddPatient = () => {
@@ -8,7 +8,7 @@ const AddPatient = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); // New state for password
   const [statusMessage, setStatusMessage] = useState('');
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -22,6 +22,7 @@ const AddPatient = () => {
     try {
       const response = await addPatient(patientData);
       setStatusMessage("Patient added successfully!");
+      navigate('/doctor-dashboard/patient-details');
       setPatientName('');
       setContactNumber('');
       setEmail('');
