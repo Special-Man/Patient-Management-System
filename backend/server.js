@@ -20,7 +20,6 @@ app.use(cors({
 // Use the routes with updated paths
 app.use('/api', superadminRoutes);
 app.use('/api/doctors', doctorRoutes); // All doctor CRUD operations will go under /api/doctors
-
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
