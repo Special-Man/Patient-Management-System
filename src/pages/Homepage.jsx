@@ -22,7 +22,7 @@ export const Homepage = () => {
         </span>
 
         <div>
-          <p className="text-2xl font-medium text-gray-900">$240.94</p>
+          <p className="text-2xl font-medium text-gray-900">$240.9 what?</p>
 
           <p className="text-sm text-gray-500">Total Sales</p>
         </div>

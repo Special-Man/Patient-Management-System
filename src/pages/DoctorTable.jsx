@@ -63,6 +63,7 @@ const DoctorTable = () => {
         doctor_name: selectedDoctor.name,
         contact_number: selectedDoctor.contact_number,
         email: selectedDoctor.email,
+        password: selectedDoctor.password, // Include the password field in the update
       });
       // Refresh the list after saving changes
       await fetchDoctors();
@@ -73,7 +74,7 @@ const DoctorTable = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>Please wait a min, Loading...</p>;
   }
 
   return (
@@ -107,6 +108,13 @@ const DoctorTable = () => {
               type="email"
               value={selectedDoctor.email}
               onChange={(e) => setSelectedDoctor({ ...selectedDoctor, email: e.target.value })}
+              className="w-full px-3 py-2 mb-4 border rounded"
+            />
+            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <input
+              type="password"
+              value={selectedDoctor.password || ''}
+              onChange={(e) => setSelectedDoctor({ ...selectedDoctor, password: e.target.value })}
               className="w-full px-3 py-2 mb-4 border rounded"
             />
             <div className="flex justify-end gap-4">

@@ -1,11 +1,11 @@
-// LoginDoctor.js
+// LoginPatient.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Field from '../components/Field';
 import { getDoctors } from '../service/doctorApi';
-import backgroundImage from '../assets/doctorpic2.jpg';
+import backgroundImage from '../assets/doctorpic1.jpg'; // You can replace with a different background image if desired
 
-const LoginDoctor = () => {
+const LoginPatient = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -14,23 +14,23 @@ const LoginDoctor = () => {
     e.preventDefault();
 
     try {
-      // Fetch doctor credentials from the API
-      const doctors = await getDoctors();
+      // Fetch patient credentials from the API
+      const patients = await getDoctors();
 
       // Find a match for the entered email and password
-      const validDoctor = doctors.find(
-        (doctor) => doctor.email === email && doctor.password === password
+      const validPatient = patients.find(
+        (patient) => patient.email === email && patient.password === password
       );
 
-      if (validDoctor) {
-        console.log('Login successful:', validDoctor);
-        // Redirect to the doctor dashboard route on successful login
-        navigate('/doctor-dashboard');
+      if (validPatient) {
+        console.log('Login successful:', validPatient);
+        // Redirect to the patient dashboard route on successful login
+        navigate('/patient-dashboard');
       } else {
         alert('Incorrect credentials');
       }
     } catch (error) {
-      console.error('Error fetching doctor credentials:', error);
+      console.error('Error fetching patient credentials:', error);
       alert('An error occurred while verifying credentials');
     }
   };
@@ -50,7 +50,7 @@ const LoginDoctor = () => {
 
       {/* Login Form */}
       <div className="relative w-full max-w-sm bg-white bg-opacity-90 p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Login Doctor</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Patient Login</h2>
         <form onSubmit={handleSubmit}>
           {fields.map((field, index) => (
             <Field
@@ -77,7 +77,7 @@ const LoginDoctor = () => {
             Login
           </button>
           <p className="text-sm text-center text-gray-600 mt-4">
-            So, You Don't have an account?{' '}
+            Don't have an account?{' '}
             <a href="#" className="text-blue-500 font-semibold hover:underline">
               Register now
             </a>
@@ -88,4 +88,4 @@ const LoginDoctor = () => {
   );
 };
 
-export default LoginDoctor;
+export default LoginPatient;

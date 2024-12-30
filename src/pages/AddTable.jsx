@@ -103,7 +103,7 @@ const AddTable = () => {
       <Modal isOpen={isDeleteModalOpen} onClose={closeModal} title="Delete User">
         {selectedUser && (
           <div>
-            <p>Are you sure you want to delete {selectedUser.name}?</p>
+            <p>Are you sure you really want to delete {selectedUser.name}?</p>
             <div className="flex mt-4">
               <button
                 className="bg-red-500 text-white py-2 px-4 rounded-lg mr-2"
