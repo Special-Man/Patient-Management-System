@@ -30,3 +30,18 @@ export const deleteDoctor = (id) => {
     .then((res) => res.data)
     .catch((err) => Promise.reject(err));
 };
+
+// Fetch a doctor by ID (GET)
+export const getDoctorById = (id) => {
+  return axios.get(`${BASE_URL}/${id}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err));
+};
+
+
+// Doctor login (POST)
+export const loginDoctor = (email, password) => {
+  return axios.post(`${BASE_URL}/login`, { email, password })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data));
+};

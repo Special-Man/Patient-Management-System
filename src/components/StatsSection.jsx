@@ -7,7 +7,7 @@ const stats = [
 ];
 export const StatsSection = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto px-4 py-12">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto px-4 py-12 -mt-16">
       {stats.map((stat, index) => (
         <motion.div
           key={index}

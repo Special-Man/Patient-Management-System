@@ -1,14 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // Import useParams
+import { getPatientById } from "../../service/patientApi"; // Import API service
 import AppointmentHistory from "./components/AppointmentHistory.jsx";
 import PatientRecords from "./components/PatientRecords.jsx";
 import MedicationTab from "./components/MedicationTab.jsx";
 
 const ViewPatient = () => {
+  const { id } = useParams(); // Retrieve patient ID from URL
+  const [patient, setPatient] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+
+  useEffect(() => {
+    const fetchPatientDetails = async () => {
+      try {
+        const patientData = await getPatientById(id); // Fetch patient details by ID
+        setPatient(patientData);
+      } catch (error) {
+        console.error("Error fetching patient details:", error);
+      }
+    };
+
+    fetchPatientDetails();
+  }, [id]);
+
+  if (!patient) {
+    return <p>Loading patient details...</p>; // Show loading state
+  }
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -21,22 +42,17 @@ const ViewPatient = () => {
             className="w-20 h-20 rounded-full object-cover"
           />
           <div>
-            <h2 className="text-lg font-semibold">Marvin McKinney</h2>
-            <p className="text-gray-500">Male · Age 32</p>
-            <p className="text-gray-500">mamckinder@gmail.com</p>
-            <p className="text-gray-500">+880 17252421323</p>
+          <h2 className="text-lg font-semibold">
+              {patient.first_name} {patient.last_name}
+            </h2>
+            <p className="text-gray-500">
+              {patient.gender} · Age {patient.age}
+            </p>
+            <p className="text-gray-500">{patient.email}</p>
+            <p className="text-gray-500">{patient.phone_number}</p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Send Alert</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Video Call</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Voice Call</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Email</button>
-        </div>
-        <div className="flex gap-2">
-          <button className="bg-red-500 text-white px-4 py-2 rounded-lg">Remove Patient</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Edit</button>
-        </div>
+
       </div>
 
       {/* Tabs */}

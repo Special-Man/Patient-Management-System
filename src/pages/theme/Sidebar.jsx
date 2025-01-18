@@ -7,12 +7,16 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { icon: Home, label: "Home", path: "/dashboard" },
+    {
+      icon: Home,
+      label: "Home",
+      path: location.pathname.includes("/doctor-dashboard")
+        ? "/doctor-dashboard"
+        : "/dashboard",
+    },
     {
       icon: Users,
-      label: location.pathname.includes("/doctor-dashboard")
-        ? "Patients"
-        : "Patients",
+      label: location.pathname.includes("/doctor-dashboard") ? "Patients" : "Patients",
       path: location.pathname.includes("/doctor-dashboard")
         ? "/doctor-dashboard/patient-details"
         : "/dashboard/add-doctor",
@@ -31,8 +35,8 @@ const Sidebar = () => {
         ? "/doctor-dashboard/appointments"
         : "/dashboard/appointments",
     },
-
   ];
+  
 
 
   return (

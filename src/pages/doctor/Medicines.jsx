@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "../../components/Table";
 import Modal from "../../components/Modal";
+import { fetchMedicines, addMedicine, deleteMedicine } from "../../service/medicineApi";
 
 const Medicines = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [medicineName, setMedicineName] = useState("");
   const [manufacturer, setManufacturer] = useState("");
   const [price, setPrice] = useState("");
-  const [medicinesData, setMedicinesData] = useState([
-    { id: 1, name: "Gobulin Green", manufacturer: "Oscorp Org.", price: "Rs. 30,000" },
-    { id: 2, name: "Lexilon", manufacturer: "Luthor Corp.", price: "Rs. 25,999" },
-    { id: 3, name: "Mountain Dew", manufacturer: "Pepsico.", price: "Rs. 100" },
-  ]);
+  const [medicinesData, setMedicinesData] = useState([]);
 
   const columns = [
     { key: "name", label: "Medicine Name" },
@@ -20,36 +17,66 @@ const Medicines = () => {
     { key: "actions", label: "Action" },
   ];
 
-  const handleAddMedicine = () => {
+  // Format medicines data to include "Rs." prefix for the price
+  const formatMedicinesData = (data) => {
+    return data.map((medicine) => ({
+      ...medicine,
+      price: `Rs. ${medicine.price}`,
+    }));
+  };
+
+  // Fetch medicines from the backend
+  const fetchAllMedicines = async () => {
+    try {
+      const data = await fetchMedicines();
+      setMedicinesData(formatMedicinesData(data)); // Format data before setting state
+    } catch (error) {
+      console.error("Error fetching medicines:", error);
+    }
+  };
+
+  // Add a new medicine
+  const handleAddMedicine = async () => {
     if (medicineName && manufacturer && price) {
-      setMedicinesData([
-        ...medicinesData,
-        {
-          id: medicinesData.length + 1,
-          name: medicineName,
-          manufacturer: manufacturer,
-          price: `Rs. ${price}`,
-        },
-      ]);
-      setMedicineName("");
-      setManufacturer("");
-      setPrice("");
-      setIsModalOpen(false);
+      const newMedicine = {
+        name: medicineName,
+        manufacturer,
+        price: parseFloat(price),
+      };
+      try {
+        const addedMedicine = await addMedicine(newMedicine);
+        setMedicinesData((prevData) => [
+          ...prevData,
+          { ...addedMedicine, price: `Rs. ${addedMedicine.price}` },
+        ]); // Format and update state instantly
+        setMedicineName("");
+        setManufacturer("");
+        setPrice("");
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("Error adding medicine:", error);
+      }
     } else {
       alert("Please fill out all fields!");
     }
   };
 
-  const handleEdit = (id) => {
-    alert(`Edit medicine with ID: ${id}`);
-  };
-
-  const handleDelete = (id) => {
+  // Delete a medicine (soft delete)
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this medicine?");
     if (confirmDelete) {
-      setMedicinesData(medicinesData.filter((medicine) => medicine.id !== id));
+      try {
+        await deleteMedicine(id);
+        setMedicinesData((prevData) => prevData.filter((medicine) => medicine.id !== id)); // Instant update
+      } catch (error) {
+        console.error("Error deleting medicine:", error);
+      }
     }
   };
+
+  useEffect(() => {
+    fetchAllMedicines(); // Fetch medicines on component mount
+  }, []);
 
   return (
     <div>
@@ -66,7 +93,7 @@ const Medicines = () => {
       <Table
         columns={columns}
         data={medicinesData}
-        onEdit={handleEdit}
+        onEdit={(id) => alert(`Edit medicine with ID: ${id}`)}
         onDelete={handleDelete}
       />
 

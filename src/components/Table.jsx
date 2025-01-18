@@ -32,8 +32,8 @@ const Table = ({ columns, data, onEdit, onDelete, onNameClick }) => {
                       column.key === 'name' ? 'text-blue-500 cursor-pointer hover:underline' : ''
                     }`}
                     onClick={
-                      column.key === 'name' ? () => onNameClick(row[column.key]) : undefined
-                    } // Handle name click
+                      column.key === 'name' ? () => onNameClick(row.id) : undefined
+                    } // Pass row.id to onNameClick
                   >
                     {row[column.key]}
                   </td>

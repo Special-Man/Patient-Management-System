@@ -1,50 +1,70 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const AddPatient = () => {
+import { addPatient } from "../../service/patientApi";
+import PopupModal from "./components/PopupModel";
+const AddPatient = ({ onPatientAdded }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // State for showing the popup
+  const [password, setPassword] = useState("");
+  const [showPopup, setShowPopup] = useState(false); // State for modal visibility
+  const [addedPatientId, setAddedPatientId] = useState(null); // State for storing patient ID
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Mock submitting the data
     const newPatient = {
-      id: Math.random(), // Generate a random ID
       first_name: firstName,
       last_name: lastName,
       address,
       phone_number: phoneNumber,
       email,
       age: parseInt(age),
+      password,
     };
 
-    console.log("New Patient Data:", newPatient);
+    try {
+      const addedPatient = await addPatient(newPatient);
+      if (addedPatient && addedPatient.id) {
+        onPatientAdded(addedPatient); // Notify parent
+        setAddedPatientId(addedPatient.id); // Store patient ID
+        setShowPopup(true); // Open modal after submission
+        resetFormFields();
+      } else {
+        throw new Error("Failed to add patient: Missing patient ID.");
+      }
+    } catch (error) {
+      console.error("Error adding patient:", error);
+      alert("Failed to add patient. Please try again.");
+    }
+  };
 
-    // Reset form fields
+  const resetFormFields = () => {
     setFirstName("");
     setLastName("");
     setAddress("");
     setPhoneNumber("");
     setEmail("");
     setAge("");
-
-    // Show the popup
-    setShowPopup(true);
+    setPassword("");
   };
 
   const handleAssignMedicine = () => {
-    navigate("/doctor-dashboard/assign-medicine"); // Redirect to Assign Medicine path
+    setShowPopup(false); // Close modal
+    navigate("/doctor-dashboard/assign-medicine");
   };
 
   const handleViewPatient = () => {
-    navigate("/doctor-dashboard/view-patient"); // Redirect to View Patient path
+    if (addedPatientId) {
+      setShowPopup(false); // Close modal
+      navigate(`/doctor-dashboard/view-patient?id=${addedPatientId}`);
+    } else {
+      alert("Patient ID is not available.");
+    }
   };
 
   return (
@@ -116,6 +136,16 @@ const AddPatient = () => {
               required
             />
           </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+            <input
+              type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+          </div>
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none"
@@ -125,30 +155,12 @@ const AddPatient = () => {
         </form>
       </div>
 
-      {/* Popup */}
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <p className="text-center text-lg font-semibold mb-4">
-              Do you want to assign medicine right now?
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={handleAssignMedicine}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg"
-              >
-                Assign Medicine
-              </button>
-              <button
-                onClick={handleViewPatient}
-                className="border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100"
-              >
-                View Patient
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Render PopupModal */}
+      <PopupModal
+        showPopup={showPopup}
+        onAssignMedicine={handleAssignMedicine}
+        onViewPatient={handleViewPatient}
+      />
     </div>
   );
 };

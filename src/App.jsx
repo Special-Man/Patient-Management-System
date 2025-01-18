@@ -37,7 +37,6 @@ function App() {
 
           <Route path="/admin" element={<Login />} />
           <Route path="/login" element={<LoginDoctor />} />
-          <Route path="/patient-login" element={<LoginPatient />} />
 
           {/* Doctor Dashboard Layout */}
           <Route path="/doctor-dashboard" element={<Layout />}>
@@ -48,14 +47,15 @@ function App() {
             <Route path="appointments" element={<Appointments />} />
             <Route path="add-appointment" element={<AddAppointments />} />
             <Route path="meds-details" element={<MedsDetails />} />
-            <Route path="view-patient" element={<ViewPatient />} />
+            <Route path="view-patient/:id" element={<ViewPatient />} />
           </Route>
 
-          {/* Default Dashboard Layout */}
+          {/* Superadmin Dashboard layout*/}
           <Route path="/dashboard" element={<Layout />}>
             <Route index element={<Homepage />} />
+          <Route path="medicines" element={<Medicines />} />
             <Route path="add-doctor" element={<AddDoctor />} />
-            <Route path="doctor-details" element={<DoctorProfile />} />
+            <Route path="doctor-details/:id" element={<DoctorProfile />} />
           </Route>
 
           {/* Patient Dashboard Layout */}
@@ -65,10 +65,6 @@ function App() {
             <Route path="medical-record" element={<MedicineRecords />} />
             <Route path="appointments" element={<PatientsAppointments />} />
             <Route path="doctors" element={<PatientDoctor />} />
-
-
-
-
           </Route>
         </Routes>
       </BrowserRouter>

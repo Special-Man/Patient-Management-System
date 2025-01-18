@@ -9,7 +9,7 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
-      <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+      <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden mt-6">
         {/* Background Placeholder */}
         <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-5" />
 
@@ -17,7 +17,7 @@ const Landing = () => {
         <img
           src="/shielf.gif"
           alt="Shield"
-          className="absolute top-6 w-20 h-20 md:w-28 md:h-28 " // Adjust size and position as needed
+          className="absolute -top-2 w-20 h-20 md:w-28 md:h-28 " // Adjust size and position as needed
         />
 
         {/* Main Content */}

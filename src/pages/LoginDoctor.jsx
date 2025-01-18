@@ -1,43 +1,49 @@
-// LoginDoctor.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Field from '../components/Field';
-import { getDoctors } from '../service/doctorApi';
+import { loginDoctor } from '../service/doctorApi';
+import { loginPatient } from '../service/patientApi';
 import backgroundImage from '../assets/doctorpic2.jpg';
+import Cookies from "js-cookie";
 
-const LoginDoctor = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isDoctorLogin, setIsDoctorLogin] = useState(true); // Toggle between Doctor and Patient
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      // Fetch doctor credentials from the API
-      const doctors = await getDoctors();
-
-      // Find a match for the entered email and password
-      const validDoctor = doctors.find(
-        (doctor) => doctor.email === email && doctor.password === password
-      );
-
-      if (validDoctor) {
-        console.log('Login successful:', validDoctor);
-        // Redirect to the doctor dashboard route on successful login
-        navigate('/doctor-dashboard');
+      if (isDoctorLogin) {
+        const response = await loginDoctor(email, password);
+        console.log("Doctor login response:", response);
+  
+        Cookies.set("role", "doctor", { expires: 1 / 144 });
+        Cookies.set("id", response.doctorId, { expires: 1 / 144 }); // Store the ID in cookies
+  
+        navigate("/doctor-dashboard");
       } else {
-        alert('Incorrect credentials');
+        const response = await loginPatient(email, password);
+        console.log("Patient login response:", response);
+  
+        Cookies.set("role", "patient", { expires: 1 / 144 });
+        Cookies.set("id", response.patient.id, { expires: 1 / 144 }); // Store the ID in cookies
+  
+        navigate("/patient");
       }
     } catch (error) {
-      console.error('Error fetching doctor credentials:', error);
-      alert('An error occurred while verifying credentials');
+      console.error("Login error:", error);
+      alert(error.response?.data?.error || "Invalid login credentials");
     }
   };
+  
+  
 
   const fields = [
     { label: 'Email', type: 'text', value: email, onChange: (e) => setEmail(e.target.value) },
-    { label: 'Password', type: 'password', value: password, onChange: (e) => setPassword(e.target.value) }
+    { label: 'Password', type: 'password', value: password, onChange: (e) => setPassword(e.target.value) },
   ];
 
   return (
@@ -50,7 +56,25 @@ const LoginDoctor = () => {
 
       {/* Login Form */}
       <div className="relative w-full max-w-sm bg-white bg-opacity-90 p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Login Doctor</h2>
+        {/* Toggle between Doctor and Patient Login */}
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => setIsDoctorLogin(true)}
+            className={`px-4 py-2 rounded-l-lg ${isDoctorLogin ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+          >
+            Doctor
+          </button>
+          <button
+            onClick={() => setIsDoctorLogin(false)}
+            className={`px-4 py-2 rounded-r-lg ${!isDoctorLogin ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+          >
+            Patient
+          </button>
+        </div>
+
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+          Login {isDoctorLogin ? 'Doctor' : 'Patient'}
+        </h2>
         <form onSubmit={handleSubmit}>
           {fields.map((field, index) => (
             <Field
@@ -88,4 +112,4 @@ const LoginDoctor = () => {
   );
 };
 
-export default LoginDoctor;
+export default Login;

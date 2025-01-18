@@ -1,19 +1,20 @@
-// routes/doctorRoutes.js
 const express = require('express');
-const { addDoctor, fetchDoctors, editDoctor, removeDoctor } = require('../controllers/doctorController');
+const {
+  addDoctor,
+  fetchAllDoctors,
+  fetchDoctorById,
+  modifyDoctor,
+  removeDoctor,
+  loginDoctor,
+} = require('../controllers/DoctorController');
 
 const router = express.Router();
 
-// Route to add a new doctor (POST request)
-router.post('/', addDoctor);
-
-// Route to get all doctors (GET request)
-router.get('/', fetchDoctors);
-
-// Route to update doctor details (PUT request)
-router.put('/:id', editDoctor);
-
-// Route to delete a doctor (DELETE request)
-router.delete('/:id', removeDoctor);
+router.post('/doctors', addDoctor); // Create a new doctor
+router.get('/doctors', fetchAllDoctors); // Get all doctors
+router.get('/doctors/:id', fetchDoctorById); // Get a doctor by ID
+router.put('/doctors/:id', modifyDoctor); // Update a doctor
+router.delete('/doctors/:id', removeDoctor); // Delete a doctor
+router.post('/doctors/login', loginDoctor);
 
 module.exports = router;

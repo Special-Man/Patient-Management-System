@@ -1,60 +1,109 @@
-// controllers/patientController.js
-const { insertPatient, getPatients, updatePatient, deletePatient } = require('../models/patientModel');
+const {
+  getAllPatients,
+  getPatientById,
+  addPatient,
+  updatePatient,
+  softDeletePatient,
+  findPatientByEmail,
+} = require('../models/patientModel');
+const bcrypt = require('bcrypt');
 
-const addPatient = async (req, res) => {
-  const { patient_name, contact_number, email, password } = req.body;
-
+// Get all patients
+const fetchAllPatients = async (req, res) => {
   try {
-    const newPatient = await insertPatient(patient_name, contact_number, email, password);
-    res.status(201).json({ message: 'Patient added successfully', patient: newPatient });
-  } catch (error) {
-    console.error('Error adding patient:', error.message);
-    res.status(500).json({ error: 'An error occurred while adding the patient' });
-  }
-};
-
-const fetchPatients = async (req, res) => {
-  try {
-    const patients = await getPatients();
+    const patients = await getAllPatients();
     res.status(200).json(patients);
   } catch (error) {
-    console.error('Error fetching patients:', error.message);
-    res.status(500).json({ error: 'An error occurred while fetching patients' });
+    console.error('Error fetching patients:', error);
+    res.status(500).json({ error: 'Failed to fetch patients' });
   }
 };
 
+// Get a single patient by ID
+const fetchPatientById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const patient = await getPatientById(id);
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+    res.status(200).json(patient);
+  } catch (error) {
+    console.error('Error fetching patient:', error);
+    res.status(500).json({ error: 'Failed to fetch patient' });
+  }
+};
+
+// Add a new patient
+const createPatient = async (req, res) => {
+  const { first_name, last_name, address, phone_number, email, age, password } = req.body;
+
+  try {
+    // Call the model to add the patient
+    const newPatient = await addPatient(first_name, last_name, address, phone_number, email, age, password);
+    res.status(201).json(newPatient);
+  } catch (error) {
+    console.error('Error creating patient:', error.message);
+    res.status(500).json({ error: 'An error occurred while creating the patient' });
+  }
+};
+
+// Update a patient
 const editPatient = async (req, res) => {
   const { id } = req.params;
-  const { patient_name, contact_number, email, password } = req.body;
-
   try {
-    const updatedPatient = await updatePatient(id, patient_name, contact_number, email, password);
-    if (updatedPatient) {
-      res.status(200).json({ message: 'Patient updated successfully', patient: updatedPatient });
-    } else {
-      res.status(404).json({ error: 'Patient not found' });
+    const updatedPatient = await updatePatient(id, req.body);
+    if (!updatedPatient) {
+      return res.status(404).json({ error: 'Patient not found or deleted' });
     }
+    res.status(200).json(updatedPatient);
   } catch (error) {
-    console.error('Error updating patient:', error.message);
-    res.status(500).json({ error: 'An error occurred while updating the patient' });
+    console.error('Error updating patient:', error);
+    res.status(500).json({ error: 'Failed to update patient' });
   }
 };
 
-// Delete controller to remove a patient by ID
-const removePatient = async (req, res) => {
+// Soft delete a patient
+const deletePatient = async (req, res) => {
   const { id } = req.params;
-
   try {
-    const deletedPatient = await deletePatient(id);
-    if (deletedPatient) {
-      res.status(200).json({ message: 'Patient deleted successfully', patient: deletedPatient });
-    } else {
-      res.status(404).json({ error: 'Patient not found' });
+    const deletedPatient = await softDeletePatient(id);
+    if (!deletedPatient) {
+      return res.status(404).json({ error: 'Patient not found' });
     }
+    res.status(200).json({ message: 'Patient marked as deleted', deletedPatient });
   } catch (error) {
-    console.error('Error deleting patient:', error.message);
-    res.status(500).json({ error: 'An error occurred while deleting the patient' });
+    console.error('Error deleting patient:', error);
+    res.status(500).json({ error: 'Failed to delete patient' });
   }
 };
 
-module.exports = { addPatient, fetchPatients, editPatient, removePatient };
+// Patient login
+const loginPatient = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const patient = await findPatientByEmail(email);
+    if (!patient) {
+      return res.status(404).json({ error: 'Invalid email or password' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, patient.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    res.status(200).json({ message: 'Login successful', patient: { id: patient.id, email: patient.email } });
+  } catch (error) {
+    console.error('Error logging in patient:', error);
+    res.status(500).json({ error: 'Failed to log in' });
+  }
+};
+
+module.exports = {
+  fetchAllPatients,
+  fetchPatientById,
+  createPatient,
+  editPatient,
+  deletePatient,
+  loginPatient,
+};

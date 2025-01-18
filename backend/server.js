@@ -2,10 +2,14 @@
 const express = require('express');
 const cors = require('cors');
 const superadminRoutes = require('./routes/superadminRoutes');
-const doctorRoutes = require('./routes/doctorRoutes');
 const patientRoutes = require('./routes/patientRoutes');
-const medsRoutes = require('./routes/medsRoutes');
+const medicineRoutes = require('./routes/medicineRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
 
+const bodyParser = require('body-parser');
+
+const doctorRoutes = require('./routes/doctorRoutes');
+const medicationRoutes = require('./routes/medicationRoutes');
 
 require('dotenv').config();
 
@@ -20,14 +24,17 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
-
+app.use(express.urlencoded({ extended: true })); // To parse URL-encoded form data
 // Use the routes with updated paths
 app.use('/api', superadminRoutes);
-app.use('/api/doctors', doctorRoutes);
  // All doctor CRUD operations will go under /api/doctors
+ app.use('/api', doctorRoutes);
+ app.use('/api/medicines', medicineRoutes);
+ app.use('/api/medication', medicationRoutes);
+ app.use('/api/appointment', appointmentRoutes);
+
 
 app.use('/api/patients', patientRoutes); // All doctor CRUD operations will go under /api/doctors
-app.use('/api/meds', medsRoutes); // All doctor CRUD operations will go under /api/doctors
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

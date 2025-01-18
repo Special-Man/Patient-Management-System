@@ -1,19 +1,31 @@
-// routes/patientRoutes.js
 const express = require('express');
-const { addPatient, fetchPatients, editPatient, removePatient } = require('../controllers/patientController');
+const {
+  fetchAllPatients,
+  fetchPatientById,
+  createPatient,
+  editPatient,
+  deletePatient,
+  loginPatient,
+} = require('../controllers/patientController');
 
 const router = express.Router();
 
-// Route to add a new patient (POST request)
-router.post('/', addPatient);
+// Get all patients
+router.get('/', fetchAllPatients);
 
-// Route to get all patients (GET request)
-router.get('/', fetchPatients);
+// Get a single patient by ID
+router.get('/:id', fetchPatientById);
 
-// Route to update patient details (PUT request)
+// Add a new patient
+router.post('/', createPatient);
+
+// Update an existing patient
 router.put('/:id', editPatient);
 
-// Route to delete a patient (DELETE request)
-router.delete('/:id', removePatient);
+// Soft delete a patient
+router.delete('/:id', deletePatient);
+
+// Patient login
+router.post('/login', loginPatient);
 
 module.exports = router;

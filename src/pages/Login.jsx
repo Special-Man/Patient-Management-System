@@ -4,31 +4,36 @@ import { useNavigate } from 'react-router-dom';
 import Field from '../components/Field';
 import { getSuperadminCredentials } from '../service/superadminApi';
 import backgroundImage from '../assets/doctorpic1.jpg'; // Make sure the path is correct
-
+import Cookies from "js-cookie";
+import { useAuth } from '../hooks/useAuth';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { setRole } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const credentials = await getSuperadminCredentials();
       const validCredentials = credentials.find(
         (cred) => cred.username === email && cred.password === password
       );
-
-      if (validCredentials) {
-        navigate('/dashboard');
-      } else {
-        alert('Incorrect credentials');
-      }
+  
+       // Validate login credentials
+    if (validCredentials) {
+      setRole("superadmin"); // Set role instantly
+      navigate("/dashboard");
+    } else {
+      alert("Incorrect credentials");
+    }
     } catch (error) {
       console.error('Error fetching credentials:', error);
       alert('An error occurred while verifying credentials');
     }
   };
+  
 
   const handleDoctorNavigation = () => {
     navigate('/doctor-login');

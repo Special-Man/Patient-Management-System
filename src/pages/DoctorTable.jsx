@@ -25,21 +25,29 @@ const DoctorTable = () => {
     setLoading(true);
     try {
       const doctors = await getDoctors();
-      setData(doctors);
+      const formattedData = doctors.map((doctor) => ({
+        id: doctor.id,
+        name: `${doctor.first_name} ${doctor.last_name}`,
+        contact_number: doctor.phone_number,
+        email: doctor.email,
+      }));
+      setData(formattedData);
     } catch (error) {
       console.error('Error fetching doctors:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchDoctors();
   }, []);
 
-  const handleNameClick = (doctorId) => {
-    navigate(`/dashboard/doctor-details`); // Redirect to /doctor-details with doctor ID
-  };
+const handleNameClick = (doctorId) => {
+  navigate(`/dashboard/doctor-details/${doctorId}`); // Redirect with the doctor ID
+};
+
 
   const handleEdit = (id) => {
     const doctor = data.find((doctor) => doctor.id === id);
@@ -81,17 +89,34 @@ const DoctorTable = () => {
     }
   };
 
-  const handleDoctorAdded = (newDoctor) => {
-    const formattedDoctor = {
-      id: newDoctor.id,
-      name: newDoctor.doctor_name || 'N/A',
-      contact_number: newDoctor.contact_number || 'N/A',
-      email: newDoctor.email || 'N/A',
-    };
-    console.log('Formatted Doctor:', formattedDoctor);
-    setData((prevData) => [...prevData, formattedDoctor]);
-    setIsAddModalOpen(false);
+  const handleDoctorAdded = async (newDoctor) => {
+    try {
+      const formattedDoctor = {
+        id: newDoctor.id,
+        name: `${newDoctor.first_name} ${newDoctor.last_name}`,
+        contact_number: newDoctor.phone_number,
+        email: newDoctor.email,
+      };
+      
+      // Update the state with the formatted doctor immediately
+      setData((prevData) => [...prevData, formattedDoctor]);
+  
+      // Optionally, refresh the list from the backend to ensure consistency
+      const updatedDoctors = await getDoctors();
+      const formattedData = updatedDoctors.map((doctor) => ({
+        id: doctor.id,
+        name: `${doctor.first_name} ${doctor.last_name}`,
+        contact_number: doctor.phone_number,
+        email: doctor.email,
+      }));
+      setData(formattedData);
+  
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error('Error adding doctor to the state:', error);
+    }
   };
+  
 
   if (loading) {
     return <p>Please wait a min, Loading...</p>;

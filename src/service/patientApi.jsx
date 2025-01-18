@@ -30,3 +30,18 @@ export const deletePatient = (id) => {
     .then((res) => res.data)
     .catch((err) => Promise.reject(err));
 };
+
+export const loginPatient = (email, password) => {
+  return axios
+    .post(`${BASE_URL}/login`, { email, password })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err));
+};
+
+// Fetch a single patient by ID (GET)
+export const getPatientById = (id) => {
+  return axios
+    .get(`${BASE_URL}/${id}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err));
+};

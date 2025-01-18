@@ -1,30 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import NewTable from "../../components/NewTable";
+import { fetchMedicationsByPatientId } from "../../service/medicationApi";
 
 const PatientMedicine = () => {
-  const medicines = [
-    {
-      id: 1,
-      name: "GOBULIN GREEN",
-      manufacturer: "OSCORP ORG.",
-      price: "RS. 30,000",
-    },
-    {
-      id: 2,
-      name: "LEXILON",
-      manufacturer: "LUTHOR CORP",
-      price: "RS. 25,999",
-    },
-    {
-      id: 3,
-      name: "BLISS",
-      manufacturer: "ARKHAM CO.",
-      price: "RS. 25,999",
-    },
-  ];
+  const patientId = Cookies.get("id"); // Get patient ID from cookies
+  const [medicines, setMedicines] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedMedicines = await fetchMedicationsByPatientId(patientId);
+        setMedicines(
+          fetchedMedicines.map((medicine) => ({
+            id: medicine.id,
+            name: medicine.medicine_name || "N/A", // Default value if undefined
+            manufacturer: medicine.manufacturer || "N/A", // Default value if undefined
+            price: medicine.price ? `RS. ${medicine.price}` : "N/A", // Default value if undefined
+            time1: medicine.time1, // Time slot 1
+            time2: medicine.time2, // Time slot 2
+            time3: medicine.time3, // Time slot 3
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching medications:", error);
+      }
+    };
+
+    fetchData();
+  }, [patientId]);
 
   const columns = [
-    { key: "name", label: "PATIENTS NAME" },
+    { key: "name", label: "MEDICINE NAME" },
     { key: "manufacturer", label: "MANUFACTURER" },
     { key: "price", label: "PRICE" },
     { key: "time", label: "TIME" },

@@ -1,25 +1,60 @@
-import { Edit, Mail, Phone, Video } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Edit, Mail, Phone, Video } from 'lucide-react';
+import { getDoctorById } from '../../service/doctorApi';
 const DoctorProfile = () => {
+  const { id } = useParams(); // Get doctor ID from URL
+  const navigate = useNavigate();
+  const [doctor, setDoctor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      try {
+        const data = await getDoctorById(id); // Fetch doctor details
+        setDoctor(data);
+      } catch (error) {
+        console.error('Error fetching doctor:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDoctor();
+  }, [id]);
+
+  if (loading) {
+    return <p>Loading doctor details...</p>;
+  }
+
+  if (!doctor) {
+    return <p>Doctor not found.</p>;
+  }
+
   return (
     <div className="p-8 animate-fadeIn">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900">ADMIN</h1>
-        <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+        >
           GO TO HOME
         </button>
       </div>
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
         <div className="flex items-start gap-6 mb-8">
           <img
-            src="/lovable-uploads/9faa1600-af9c-418f-a1a9-19dae4c65a33.png"
-            alt="Dr. Stephen Strange"
+            src={doctor.profile_picture || '/default-profile.png'}
+            alt={`${doctor.first_name} ${doctor.last_name}`}
             className="w-16 h-16 rounded-full object-cover"
           />
           <div className="flex-1">
-            <h2 className="text-xl font-semibold text-gray-900">Dr. Stephen Strange</h2>
-            <p className="text-gray-500 text-sm mt-1">Male • Age 52</p>
-            <p className="text-gray-500 text-sm">arkhamasylum@dc.com</p>
-            <p className="text-gray-500 text-sm">+880 17252423123</p>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Dr. {doctor.first_name} {doctor.last_name}
+            </h2>
+            <p className="text-gray-500 text-sm mt-1">{doctor.gender || 'N/A'} • Age {doctor.age}</p>
+            <p className="text-gray-500 text-sm">{doctor.email}</p>
+            <p className="text-gray-500 text-sm">{doctor.phone_number}</p>
           </div>
         </div>
         <div className="flex gap-3 mb-8">
@@ -47,7 +82,7 @@ const DoctorProfile = () => {
                 <label className="block text-sm text-gray-500 mb-1">Full Name</label>
                 <input
                   type="text"
-                  value="Dr. Stephen Strange"
+                  value={`Dr. ${doctor.first_name} ${doctor.last_name}`}
                   className="w-full p-2 border border-gray-200 rounded-lg"
                   readOnly
                 />
@@ -56,7 +91,7 @@ const DoctorProfile = () => {
                 <label className="block text-sm text-gray-500 mb-1">Age</label>
                 <input
                   type="text"
-                  value="48"
+                  value={doctor.age || 'N/A'}
                   className="w-full p-2 border border-gray-200 rounded-lg"
                   readOnly
                 />
@@ -65,7 +100,7 @@ const DoctorProfile = () => {
                 <label className="block text-sm text-gray-500 mb-1">Email</label>
                 <input
                   type="email"
-                  value="dr.strange@marvel.com"
+                  value={doctor.email}
                   className="w-full p-2 border border-gray-200 rounded-lg"
                   readOnly
                 />
@@ -76,7 +111,7 @@ const DoctorProfile = () => {
                 <label className="block text-sm text-gray-500 mb-1">Phone Number</label>
                 <input
                   type="text"
-                  value="616-1610-838"
+                  value={doctor.phone_number || 'N/A'}
                   className="w-full p-2 border border-gray-200 rounded-lg"
                   readOnly
                 />
@@ -85,7 +120,7 @@ const DoctorProfile = () => {
                 <label className="block text-sm text-gray-500 mb-1">Address</label>
                 <input
                   type="text"
-                  value="New York City, 177A Bleecker Street"
+                  value={doctor.address || 'N/A'}
                   className="w-full p-2 border border-gray-200 rounded-lg"
                   readOnly
                 />
@@ -94,14 +129,13 @@ const DoctorProfile = () => {
                 <label className="block text-sm text-gray-500 mb-1">Specialty</label>
                 <input
                   type="text"
-                  value="Master of Mystic Art, Sorcerer"
+                  value={doctor.specialty || 'N/A'}
                   className="w-full p-2 border border-gray-200 rounded-lg"
                   readOnly
                 />
               </div>
             </div>
           </div>
-          
           <div className="mt-6 flex gap-3">
             <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
               <Edit className="w-4 h-4" />
@@ -116,4 +150,5 @@ const DoctorProfile = () => {
     </div>
   );
 };
+
 export default DoctorProfile;
