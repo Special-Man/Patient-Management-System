@@ -79,20 +79,7 @@ const Login = () => {
           >
             Login
           </button>
-          <button
-            type="button"
-            onClick={handleDoctorNavigation}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none mt-4"
-          >
-            Doctor
-          </button>
-          <button
-            type="button"
-            onClick={handlePatientNavigation}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none mt-4"
-          >
-            Patient
-          </button>
+    
           <p className="text-sm text-center text-gray-600 mt-4">
             Don't have an account?{' '}
             <a href="#" className="text-blue-500 font-semibold hover:underline">

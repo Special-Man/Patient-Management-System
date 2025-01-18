@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Table = ({ columns, data, onEdit, onDelete }) => {
+const Table = ({ columns, data, onEdit, onDelete, onNameClick }) => {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-200">
@@ -26,7 +26,15 @@ const Table = ({ columns, data, onEdit, onDelete }) => {
               {columns
                 .filter((col) => col.key !== 'actions')
                 .map((column) => (
-                  <td key={column.key} className="py-2 px-4 border-b border-gray-200">
+                  <td
+                    key={column.key}
+                    className={`py-2 px-4 border-b border-gray-200 ${
+                      column.key === 'name' ? 'text-blue-500 cursor-pointer hover:underline' : ''
+                    }`}
+                    onClick={
+                      column.key === 'name' ? () => onNameClick(row[column.key]) : undefined
+                    } // Handle name click
+                  >
                     {row[column.key]}
                   </td>
                 ))}

@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Table from '../components/Table';
 import Modal from '../components/Modal';
+import AddDoctor from './AddDoctor';
 import { getDoctors, editDoctor, deleteDoctor } from '../service/doctorApi';
 
 const DoctorTable = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+  const navigate = useNavigate(); // Initialize navigate
 
   const columns = [
     { key: 'name', label: 'Name' },
     { key: 'contact_number', label: 'Contact Number' },
     { key: 'email', label: 'Email' },
-    { key: 'actions', label: 'Actions' }
+    { key: 'actions', label: 'Actions' },
   ];
 
-  // Fetch doctors from the backend
   const fetchDoctors = async () => {
     setLoading(true);
     try {
@@ -33,6 +37,10 @@ const DoctorTable = () => {
     fetchDoctors();
   }, []);
 
+  const handleNameClick = (doctorId) => {
+    navigate(`/dashboard/doctor-details`); // Redirect to /doctor-details with doctor ID
+  };
+
   const handleEdit = (id) => {
     const doctor = data.find((doctor) => doctor.id === id);
     setSelectedDoctor(doctor);
@@ -41,6 +49,7 @@ const DoctorTable = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setIsAddModalOpen(false);
     setSelectedDoctor(null);
   };
 
@@ -49,7 +58,7 @@ const DoctorTable = () => {
     if (confirmDelete) {
       try {
         await deleteDoctor(id);
-        setData(data.filter((doctor) => doctor.id !== id)); // Remove from local state
+        setData(data.filter((doctor) => doctor.id !== id));
         console.log('Deleted doctor with ID:', id);
       } catch (error) {
         console.error('Error deleting doctor:', error);
@@ -63,14 +72,25 @@ const DoctorTable = () => {
         doctor_name: selectedDoctor.name,
         contact_number: selectedDoctor.contact_number,
         email: selectedDoctor.email,
-        password: selectedDoctor.password, // Include the password field in the update
+        password: selectedDoctor.password,
       });
-      // Refresh the list after saving changes
       await fetchDoctors();
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error updating doctor:', error);
     }
+  };
+
+  const handleDoctorAdded = (newDoctor) => {
+    const formattedDoctor = {
+      id: newDoctor.id,
+      name: newDoctor.doctor_name || 'N/A',
+      contact_number: newDoctor.contact_number || 'N/A',
+      email: newDoctor.email || 'N/A',
+    };
+    console.log('Formatted Doctor:', formattedDoctor);
+    setData((prevData) => [...prevData, formattedDoctor]);
+    setIsAddModalOpen(false);
   };
 
   if (loading) {
@@ -79,13 +99,24 @@ const DoctorTable = () => {
 
   return (
     <div>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-bold">Admin</h1>
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add Doctor +
+        </button>
+      </div>
       <Table
         columns={columns}
         data={data}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onNameClick={handleNameClick} // Pass the handleNameClick function to the Table component
       />
 
+      {/* Edit Modal */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Edit Doctor">
         {selectedDoctor && (
           <div>
@@ -118,11 +149,17 @@ const DoctorTable = () => {
               className="w-full px-3 py-2 mb-4 border rounded"
             />
             <div className="flex justify-end gap-4">
-              <button onClick={handleCloseModal} className="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-blue-500 text-white rounded">Save</button>
+              <button onClick={handleSave} className="px-4 py-2 bg-blue-500 text-white rounded">
+                Save
+              </button>
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Add Doctor Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={handleCloseModal} title="Add New Doctor">
+        <AddDoctor onDoctorAdded={handleDoctorAdded} />
       </Modal>
     </div>
   );

@@ -1,6 +1,6 @@
 // controllers/doctorController.js
 const { password } = require('pg/lib/defaults');
-const { insertDoctor, getDoctors, updateDoctor, deleteDoctor } = require('../models/doctorModel');
+const { insertDoctor, getDoctors, updateDoctor, deleteDoctor } = require('../models/DoctorModel');
 
 const addDoctor = async (req, res) => {
   const { doctor_name, contact_number, email, password } = req.body;

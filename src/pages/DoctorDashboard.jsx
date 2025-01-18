@@ -1,34 +1,46 @@
-import React from 'react'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import doctorImage from "../assets/doctorpic1.jpg"; // Adjust the path as needed
 
 const DoctorDashboard = () => {
-    return (
-        <div>
-          <article className="flex items-center gap-4 rounded-lg border border-gray-100 bg-white p-6">
-            <span className="rounded-full bg-blue-100 p-3 text-blue-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="size-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </span>
-    
-            <div>
-              <p className="text-2xl font-medium text-gray-900">$240.9 what?</p>
-    
-              <p className="text-sm text-gray-500">Total Sales</p>
-            </div>
-          </article>
-        </div>
-      );
-}
+  const navigate = useNavigate();
 
-export default DoctorDashboard
+  const cards = [
+    { label: "PATIENTS", path: "/patients" },
+    { label: "MEDICINES", path: "/medicines" },
+    { label: "APPOINTMENTS", path: "/appointments" },
+  ];
+
+  return (
+    <div className="bg-gray-100 min-h-screen">
+      {/* Welcome Section */}
+      <header className="bg-gray-200 py-4 text-center">
+        <h1 className="text-2xl font-bold text-gray-800">WELCOME DR. AMIRUL HAQUE</h1>
+      </header>
+
+      {/* Cards Section */}
+      <div className="flex flex-col items-center gap-6 p-6">
+        {cards.map((card, index) => (
+          <div
+            key={index}
+            onClick={() => navigate(card.path)}
+            className="w-full max-w-4xl cursor-pointer rounded-lg overflow-hidden shadow-md relative"
+          >
+            {/* Background Image */}
+            <img
+              src={doctorImage}
+              alt={card.label}
+              className="w-full h-48 object-cover"
+            />
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+              <h2 className="text-white text-2xl font-bold">{card.label}</h2>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default DoctorDashboard;

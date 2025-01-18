@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './App.css';
+import "./App.css";
 
-import { Homepage } from './pages/Homepage';
+import { Homepage } from "./pages/Homepage";
 import Layout from "./pages/theme/Layout";
+import PatientLayout from "./pages/theme/PatientLayout"; // New Layout for /patient route
 
 import Login from "./pages/Login";
 import AddDoctor from "./pages/AddDoctor";
@@ -14,39 +15,60 @@ import PatientDetails from "./pages/PatientDetails";
 import AddPatient from "./pages/AddPatient";
 import AddMeds from "./pages/AddMeds";
 import MedsDetails from "./pages/MedsDetails";
+import DoctorProfile from "./pages/doctor/DoctorProfile";
+import PatientTable from "./pages/doctor/PatientTable";
+import ViewPatient from "./pages/doctor/ViewPatient";
+import Medicines from "./pages/doctor/Medicines";
+import Appointments from "./pages/doctor/Appointments";
+import AddAppointments from "./pages/doctor/components/AddAppointments";
+import PatientDashboard from "./pages/patient/PatientDashboard";
+import PatientMedicine from "./pages/patient/PatientMedicine";
+import MedicineRecords from "./pages/patient/MedicineRecords";
+import PatientsAppointments from "./pages/patient/PatientAppointments";
+import PatientDoctor from "./pages/patient/PatientDoctor";
+import Landing from "./pages/Landing";
 
 function App() {
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />}>
-            <Route path="/back" element={<AddDoctor />} />
-          </Route>
+        <Route path="/" element={<Landing />} />
 
-          <Route path="/doctor-login" element={<LoginDoctor />} />
+          <Route path="/admin" element={<Login />} />
+          <Route path="/login" element={<LoginDoctor />} />
           <Route path="/patient-login" element={<LoginPatient />} />
 
+          {/* Doctor Dashboard Layout */}
           <Route path="/doctor-dashboard" element={<Layout />}>
-            <Route index element={<DoctorDashboard />} /> {/* Render Homepage by default */}
-            <Route path="patient-details" element={<PatientDetails />} /> {/* AddDoctor route */}
-            <Route path="add-patient" element={<AddPatient />} /> {/* AddDoctor route */}
-            <Route path="add-meds" element={<AddMeds />} /> {/* AddDoctor route */}
-            <Route path="meds-details" element={<MedsDetails />} /> {/* AddDoctor route */}
-
-
-
-
-         
+            <Route index element={<DoctorDashboard />} />
+            <Route path="patient-details" element={<PatientTable />} />
+            <Route path="add-patient" element={<AddPatient />} />
+            <Route path="medicines" element={<Medicines />} />
+            <Route path="appointments" element={<Appointments />} />
+            <Route path="add-appointment" element={<AddAppointments />} />
+            <Route path="meds-details" element={<MedsDetails />} />
+            <Route path="view-patient" element={<ViewPatient />} />
           </Route>
-          
 
+          {/* Default Dashboard Layout */}
           <Route path="/dashboard" element={<Layout />}>
-            <Route index element={<Homepage />} /> {/* Render Homepage by default */}
-            <Route path="add-doctor" element={<AddDoctor />} /> {/* AddDoctor route */}
-            <Route path="doctor-details" element={<DoctorTable />} /> {/* AddDoctor route */}
+            <Route index element={<Homepage />} />
+            <Route path="add-doctor" element={<AddDoctor />} />
+            <Route path="doctor-details" element={<DoctorProfile />} />
+          </Route>
 
-          
+          {/* Patient Dashboard Layout */}
+          <Route path="/patient" element={<PatientLayout />}>
+            <Route index element={<PatientDashboard />} />
+            <Route path="medicines" element={<PatientMedicine />} />
+            <Route path="medical-record" element={<MedicineRecords />} />
+            <Route path="appointments" element={<PatientsAppointments />} />
+            <Route path="doctors" element={<PatientDoctor />} />
+
+
+
+
           </Route>
         </Routes>
       </BrowserRouter>
