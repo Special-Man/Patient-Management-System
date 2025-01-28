@@ -1,5 +1,9 @@
 import React from "react";
 import doctorPic from "../../assets/doctorpic1.jpg"; // Use the doctor image from the assets folder
+import medsPic from "../../assets/meds.jpg"; 
+import docPic from "../../assets/doc.png"; 
+
+
 
 const PatientDashboard = () => {
   return (
@@ -19,9 +23,9 @@ const PatientDashboard = () => {
 
       {/* Welcome Section */}
       <div className="text-center my-10 px-6">
-        <h2 className="text-2xl font-bold mb-4">WELCOME MARVIN!!</h2>
+        <h2 className="text-2xl font-bold mb-4">WELCOME TO MEDS-PLUS</h2>
         <h3 className="text-lg font-semibold mb-2">
-          THIS IS MEDS PLUS TO HELP YOU DIE!
+          THIS IS MEDS PLUS TO HELP YOU FIND CURE!
         </h3>
         <p className="text-gray-600">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -35,7 +39,7 @@ const PatientDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 mb-10">
         {/* Medicine Card */}
         <div className="border rounded-lg shadow-md overflow-hidden">
-          <img src={doctorPic} alt="Medicine" className="w-full h-48 object-cover" />
+          <img src={medsPic} alt="Medicine" className="w-full h-48 object-cover" />
           <div className="p-4">
             <p className="text-gray-500 text-sm">4 Feb 2025</p>
             <h3 className="text-lg font-semibold mb-2">
@@ -53,7 +57,7 @@ const PatientDashboard = () => {
 
         {/* Appointment Card */}
         <div className="border rounded-lg shadow-md overflow-hidden">
-          <img src={doctorPic} alt="Appointments" className="w-full h-48 object-cover" />
+          <img src={docPic} alt="Appointments" className="w-full h-48 object-cover" />
           <div className="p-4">
             <p className="text-gray-500 text-sm">4 Feb 2025</p>
             <h3 className="text-lg font-semibold mb-2">

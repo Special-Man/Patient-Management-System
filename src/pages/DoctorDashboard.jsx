@@ -1,21 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import doctorImage from "../assets/doctorpic1.jpg"; // Adjust the path as needed
+// import doctrImage from "../assets/doctorpic2.jpg"; 
+
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
 
   const cards = [
-    { label: "PATIENTS", path: "/patients" },
-    { label: "MEDICINES", path: "/medicines" },
-    { label: "APPOINTMENTS", path: "/appointments" },
+    { label: "PATIENTS", path: "/doctor-dashboard/patient-details" },
+    { label: "MEDICINES", path: "/doctor-dashboard/medicines" },
+    { label: "APPOINTMENTS", path: "/doctor-dashboard/appointments" },
   ];
 
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Welcome Section */}
       <header className="bg-gray-200 py-4 text-center">
-        <h1 className="text-2xl font-bold text-gray-800">WELCOME DR. AMIRUL HAQUE</h1>
+        <h1 className="text-2xl font-bold text-gray-800">WELCOME DOCTOR</h1>
       </header>
 
       {/* Cards Section */}
@@ -32,6 +34,7 @@ const DoctorDashboard = () => {
               alt={card.label}
               className="w-full h-48 object-cover"
             />
+           
             {/* Overlay */}
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <h2 className="text-white text-2xl font-bold">{card.label}</h2>
